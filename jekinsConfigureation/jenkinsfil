@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+    parameters{
+        choice(name: "branch", choices: ["production", "staging", "development"], description: "Sample multi-choice parameter")
+        text(name: "expose_port", defaultValue: "8080", description: "for expose port")
+        booleanParam(name: "skip_deploy", defaultValue: false, description: "use for skip stage")
+        booleanParam(name: "skip_build", defaultValue: false, description: "use for skip stage")
+
+
+    }
+    stages {
+        stage('Git clone with choice ') {
+            steps {
+                script{
+                    if (params.branch == 'production' ){
+                        echo " production"
+                        git branch:'main' , url: 'https://github.com/SoemVirakk/spring_test.git'
+                    } else if (params.branch == 'staging'){
+                        echo " staging"
+                        git branch:'master' , url: 'https://github.com/SoemVirakk/spring_test.git'
+
+                    } else {
+                        echo " development"
+                        git branch:'developer' , url: 'https://github.com/SoemVirakk/spring_test.git'
+
+                    }
+                }
+            }
+        }
+        stage('build with dockerfile'){
+            when {
+                expression {
+                    return ! params.skip_build
+                }
+            }
+            steps{
+                sh 'docker build -t reactwithchoice:${BUILD_NUMBER} -f react-dockerfile .'
+            }
+        }
+        stage('deploy'){
+            when {
+                expression {
+                    return ! params.skip_deploy
+                }
+            }
+            steps{
+                sh 'docker run -d -p ${expose_port}:80 reactwithchoice:${BUILD_NUMBER} '
+            }
+        }
+    }
+}

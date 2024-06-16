@@ -2,7 +2,17 @@
 
 pipeline {
     agent any
+    environment {
+        DOCKER_TAG  = "${BUILD_NUMBER}"
+    }
+    parameters{
+        booleanParam(name: "TEST _BOOLEN", defaulValue: true, desription: "Sample")
+        string(name: "TEST_STRING" defaulValue:"dara", trim: true, description: "Sample")
+        text(name:"TEST_TEXT", defaulValue:"Jenkins Pipelin Tutorial ", description: "text parameter")
+        password(name: "TEST_PASSWORD", defaulValue: "SECRET", decription:"Sample"
+        choise(name:"TEST_CHOICE", chiose:["production", "staging","development","multi-choise-parameter" ]))
 
+    }  
     stages {
         stage('Git Hub clone') {
             steps {
@@ -19,7 +29,12 @@ pipeline {
         stage('Write Docker file to git repository') {
             steps {
                 script {
-                    apiWithDocker()
+                    apiWithDocker(
+                        // DOCKER_USER = 'Soemvirak93gmail.com',
+                        // DOCKER_PASS = 'User$2025',
+                        TAGS = ${env.BUILD_NUME}
+                 //       IMAGE_NAME = 'SpringDocker'
+                    )
                 }
             }
         }
