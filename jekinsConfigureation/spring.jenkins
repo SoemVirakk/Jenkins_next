@@ -1,0 +1,33 @@
+@Library(['my-share-library']) _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Git Hub clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/SoemVirakk/spring_test.git'
+            }
+        }
+
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+
+        stage('Write Docker file to git repository') {
+            steps {
+                script {
+                    apiWithDocker()
+                }
+            }
+        }
+
+        stage('List dir') {
+            steps {
+                sh "ls -lrt"
+            }
+        }
+    }
+}
