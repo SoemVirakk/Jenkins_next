@@ -23,6 +23,15 @@ pipeline {
                 }
             }
         }
+        stege('Build Docker Image'){
+            steps{
+                script{
+                    echo "Build Docker Image: ${registry}/ $image: ${tag}"
+                    sh """
+l                    """
+                }
+            }
+        }
 
         stage('List dir') {
             steps {
