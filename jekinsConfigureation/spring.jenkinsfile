@@ -2,56 +2,66 @@
 
 pipeline {
     agent any
-    environment {
-        DOCKER_TAG  = "${BUILD_NUMBER}"
+    // environment {
+    //     DOCKER_TAG  = "${BUILD_NUMBER}"   // build number in jenkins
+    // } 
+     environment {
+        BotToken = "7232781869:AAFPUS41hvqWF3Fqp6nWUgQBWSGG-_ugucQ"
+        chat_id = "16620561952739468429"
     }
     parameters{
-        booleanParam(name: "TEST _BOOLEN", defaulValue: true, desription: "Sample")
-        string(name: "TEST_STRING" defaulValue:"dara", trim: true, description: "Sample")
-        text(name:"TEST_TEXT", defaulValue:"Jenkins Pipelin Tutorial ", description: "text parameter")
-        password(name: "TEST_PASSWORD", defaulValue: "SECRET", decription:"Sample"
-        choise(name:"TEST_CHOICE", chiose:["production", "staging","development","multi-choise-parameter" ]))
+    //     booleanParam(name: "TEST _BOOLEN", defaulValue: true, desription: "Sample")
+    //     string(name: "TEST_STRING" defaulValue:"dara", trim: true, description: "Sample")
+    //     text(name:"TEST_TEXT", defaulValue:"Jenkins Pipelin Tutorial ", description: "text parameter")
+    //     password(name: "TEST_PASSWORD", defaulValue: "SECRET", decription:"Sample"
+    //     choise(name:"TEST_CHOICE", chiose:["production", "staging","development","multi-choise-parameter" ]))
 
-    }  
+    // }  
     stages {
         stage('Git Hub clone') {
             steps {
                 git branch: 'main', url: 'https://github.com/SoemVirakk/spring_test.git'
             }
         }
-
         stage('Hello') {
             steps {
-                echo 'Hello World'
-            }
-        }
 
-        stage('Write Docker file to git repository') {
-            steps {
-                script {
-                    apiWithDocker(
-                        // DOCKER_USER = 'Soemvirak93gmail.com',
-                        // DOCKER_PASS = 'User$2025',
-                        TAGS = ${env.BUILD_NUME}
-                 //       IMAGE_NAME = 'SpringDocker'
-                    )
-                }
+                sh "curl -s -X POST \"https://api.telegram.org/bot${env.BotToken}/sendMessage\" -d chat_id=${env.chat_id} -d text=\"Good Morning!\""
             }
         }
-        stege('Build Docker Image'){
-            steps{
-                script{
-                    echo "Build Docker Image: ${registry}/ $image: ${tag}"
-                    sh """
-l                    """
-                }
-            }
-        }
-
-        stage('List dir') {
+        stage('List Directory') {
             steps {
                 sh "ls -lrt"
             }
         }
+
+        // stage('Write Docker file to git repository') {
+        //     echo "build number is ${BUILD_NUMBER}"
+        //     steps {
+        //         script {
+        //             apiWithDocker(
+        //                 // DOCKER_USER = 'Soemvirak93gmail.com',
+        //                 // DOCKER_PASS = 'User$2025',
+        //                 TAGS = ${env.BUILD_NUME}
+        //          //       IMAGE_NAME = 'SpringDocker'
+        //             )
+        //         }
+        //     }
+        // }
+//         stege('Build Docker Image'){
+//             steps{
+//                 script{
+//                     echo "Build Docker Image: ${registry}/ $image: ${tag}"
+//                     sh """
+// l                    """
+//                 }
+//             }
+//         }
+
+//         stage('List dir') {
+//             steps {
+//                 sh "ls -lrt"
+//             }
+//         }
     }
 }
