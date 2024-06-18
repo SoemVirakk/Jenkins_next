@@ -1,7 +1,7 @@
 @Library(['my-share-library']) _
 
 pipeline {
-    agent any
+    gent any
     // environment {
     //     DOCKER_TAG  = "${BUILD_NUMBER}"   // build number in jenkins
     // } 
@@ -9,7 +9,7 @@ pipeline {
         BotToken = "7232781869:AAFPUS41hvqWF3Fqp6nWUgQBWSGG-_ugucQ"
         chat_id = "16620561952739468429"
     }
-    parameters{
+    //parameters{
     //     booleanParam(name: "TEST _BOOLEN", defaulValue: true, desription: "Sample")
     //     string(name: "TEST_STRING" defaulValue:"dara", trim: true, description: "Sample")
     //     text(name:"TEST_TEXT", defaulValue:"Jenkins Pipelin Tutorial ", description: "text parameter")
@@ -18,12 +18,17 @@ pipeline {
 
     // }  
     stages {
+        stage('Clean work space'){
+            steps{
+                cleanWs()
+            }
+        }
         stage('Git Hub clone') {
             steps {
                 git branch: 'main', url: 'https://github.com/SoemVirakk/spring_test.git'
             }
         }
-        stage('Hello') {
+        stage('Telegram Notifycation') {
             steps {
 
                 sh "curl -s -X POST \"https://api.telegram.org/bot${env.BotToken}/sendMessage\" -d chat_id=${env.chat_id} -d text=\"Good Morning!\""
@@ -48,20 +53,20 @@ pipeline {
         //         }
         //     }
         // }
-//         stege('Build Docker Image'){
-//             steps{
-//                 script{
-//                     echo "Build Docker Image: ${registry}/ $image: ${tag}"
-//                     sh """
-// l                    """
-//                 }
-//             }
-//         }
+        //         stege('Build Docker Image'){
+        //             steps{
+        //                 script{
+        //                     echo "Build Docker Image: ${registry}/ $image: ${tag}"
+        //                     sh """
+        // l                    """
+        //                 }
+        //             }
+        //         }
 
-//         stage('List dir') {
-//             steps {
-//                 sh "ls -lrt"
-//             }
-//         }
+        //         stage('List dir') {
+        //             steps {
+        //                 sh "ls -lrt"
+        //             }
     }
 }
+
